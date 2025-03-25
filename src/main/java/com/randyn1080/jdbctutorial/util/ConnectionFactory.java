@@ -54,4 +54,14 @@ public class ConnectionFactory {
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
+
+    // Test the connection
+    public static void main(String[] args) {
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            System.out.println("Database connection successful!");
+        } catch (SQLException e) {
+            System.err.println("Database connection failed!");
+            e.printStackTrace();
+        }
+    }
 }

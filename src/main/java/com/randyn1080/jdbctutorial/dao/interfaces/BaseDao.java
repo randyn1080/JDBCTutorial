@@ -1,4 +1,4 @@
-package com.randyn1080.jdbctutorial.dao;
+package com.randyn1080.jdbctutorial.dao.interfaces;
 
 import java.util.List;
 import java.util.Optional;

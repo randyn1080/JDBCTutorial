@@ -83,8 +83,8 @@ public class TopicDaoImpl implements TopicDao {
 
             while (rs.next()) {
                 topics.add(new Topic(rs.getInt("topic_id"),
-                        rs.getString("name"),
-                        rs.getString("description")));
+                                    rs.getString("name"),
+                                    rs.getString("description")));
             }
 
         } catch (SQLException e) {

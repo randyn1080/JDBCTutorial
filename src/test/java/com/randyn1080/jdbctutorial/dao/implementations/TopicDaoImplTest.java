@@ -23,7 +23,28 @@ class TopicDaoImplTest {
 
     @Test
     void testSaveAndFindById() {
+        // make a new topic
         Topic topic = new Topic();
+        topic.setName("Test");
+        topic.setDescription("This is a test");
+
+        // save it to the db
+        Topic savedTopic = topicDao.save(topic);
+
+        // verify it was saved correctly
+        assertNotNull(savedTopic);
+        assertTrue(savedTopic.getTopicId() > 0, "ID should be assigned");
+
+        // find it by id
+        Optional<Topic> foundTopic = topicDao.findById(savedTopic.getTopicId());
+
+        // verify it was found
+        assertTrue(foundTopic.isPresent(), "Topic should be found");
+        assertEquals("Test", foundTopic.get().getName());
+        assertEquals("This is a test", foundTopic.get().getDescription());
+
+        // clean up
+        topicDao.deleteById(savedTopic.getTopicId());
     }
 
     @Test

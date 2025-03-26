@@ -1,4 +1,4 @@
-package com.randyn1080.jdbctutorial.dao.Implementations;
+package com.randyn1080.jdbctutorial.dao.implementations;
 
 import com.randyn1080.jdbctutorial.dao.interfaces.QuestionDao;
 import com.randyn1080.jdbctutorial.model.Question;

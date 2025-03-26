@@ -1,6 +1,5 @@
 package com.randyn1080.jdbctutorial.dao.implementations;
 
-import com.randyn1080.jdbctutorial.dao.Implementations.TopicDaoImpl;
 import com.randyn1080.jdbctutorial.dao.interfaces.TopicDao;
 import com.randyn1080.jdbctutorial.model.Topic;
 

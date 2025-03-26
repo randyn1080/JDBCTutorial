@@ -1,25 +1,25 @@
-package com.randyn1080.jdbctutorial.dao.Implementations;
+package com.randyn1080.jdbctutorial.dao.implementations;
 
-import com.randyn1080.jdbctutorial.dao.interfaces.AnswerDao;
-import com.randyn1080.jdbctutorial.model.Answer;
+import com.randyn1080.jdbctutorial.dao.interfaces.TopicDao;
+import com.randyn1080.jdbctutorial.model.Topic;
 import com.randyn1080.jdbctutorial.util.ConnectionFactory;
 
+import java.util.List;
+import java.util.Optional;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 
-public class AnswerDaoImpl implements AnswerDao {
+public class TopicDaoImpl implements TopicDao {
+
+    //CREATE
     @Override
-    public Answer save(Answer answer) {
-        String sql = "INSERT INTO answers (question_id, answer_text, is_correct) VALUES (?, ?, ?)";
+    public Topic save(Topic topic) {
+        String sql = "INSERT INTO topics (name, description) VALUES (?, ?)";
         try (Connection conn = ConnectionFactory.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            ps.setInt(1, answer.getQuestionId());
-            ps.setString(2, answer.getAnswerText());
-            ps.setBoolean(3, answer.isCorrect());
+            ps.setString(1, topic.getName());
+            ps.setString(2, topic.getDescription());
 
             int affectedRows = ps.executeUpdate();
 
@@ -30,13 +30,13 @@ public class AnswerDaoImpl implements AnswerDao {
 
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    answer.setAnswerId(generatedKeys.getInt(1));
+                    topic.setTopicId(generatedKeys.getInt(1));
                 } else {
                     throw new SQLException("Creating topic failed, no ID obtained.");
                 }
             }
 
-            return answer;
+            return topic;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -44,9 +44,10 @@ public class AnswerDaoImpl implements AnswerDao {
         }
     }
 
+    //READ
     @Override
-    public Optional<Answer> findById(Integer id) {
-        String sql = "SELECT * FROM answers WHERE answer_id = ?";
+    public Optional<Topic> findById(Integer id) {
+        String sql = "SELECT * FROM topics WHERE topic_id = ?";
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -55,11 +56,10 @@ public class AnswerDaoImpl implements AnswerDao {
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Answer answer = new Answer(rs.getInt("answer_id"),
-                                                rs.getInt("question_id"),
-                                                rs.getString("answer_text"),
-                                                rs.getBoolean("is_correct"));
-                    return Optional.of(answer);
+                    Topic topic = new Topic(rs.getInt("topic_id"),
+                                            rs.getString("name"),
+                                            rs.getString("description"));
+                    return Optional.of(topic);
                 }
             }
 
@@ -68,42 +68,42 @@ public class AnswerDaoImpl implements AnswerDao {
         }
 
         return Optional.empty();
+
     }
 
+    //READ
     @Override
-    public List<Answer> findAll() {
-        List<Answer> answers = new ArrayList<>();
-        String sql = "SELECT * FROM answers";
+    public List<Topic> findAll() {
+        List<Topic> topics = new ArrayList<>();
+        String sql = "SELECT * FROM topics";
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                answers.add(new Answer(rs.getInt("answer_id"),
-                                        rs.getInt("question_id"),
-                                        rs.getString("answer_text"),
-                                        rs.getBoolean("is_correct")));
+                topics.add(new Topic(rs.getInt("topic_id"),
+                                    rs.getString("name"),
+                                    rs.getString("description")));
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return answers;
+        return topics;
     }
 
+    //UPDATE
     @Override
-    public boolean update(Answer answer) {
-        String sql = "UPDATE answers SET question_id = ?, answer_text = ?, is_correct = ? WHERE answer_id = ?";
+    public boolean update(Topic topic) {
+        String sql = "UPDATE topics SET name = ?, description = ? WHERE topic_id = ?";
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, answer.getQuestionId());
-            ps.setString(2, answer.getAnswerText());
-            ps.setBoolean(3, answer.isCorrect());
-            ps.setInt(4, answer.getAnswerId());
+            ps.setString(1, topic.getName());
+            ps.setString(2, topic.getDescription());
+            ps.setInt(3, topic.getTopicId());
 
             int affectedRows = ps.executeUpdate();
             return affectedRows > 0;
@@ -114,9 +114,10 @@ public class AnswerDaoImpl implements AnswerDao {
         }
     }
 
+    //DELETE
     @Override
     public boolean deleteById(Integer id) {
-        String sql = "DELETE FROM answers WHERE answer_id = ?";
+        String sql = "DELETE FROM topics WHERE topic_id = ?";
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -131,4 +132,5 @@ public class AnswerDaoImpl implements AnswerDao {
             return false;
         }
     }
+
 }

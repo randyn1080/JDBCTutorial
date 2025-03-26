@@ -94,12 +94,41 @@ public class AnswerDaoImpl implements AnswerDao {
     }
 
     @Override
-    public boolean update(Answer entity) {
-        return false;
+    public boolean update(Answer answer) {
+        String sql = "UPDATE answers SET question_id = ?, answer_text = ?, is_correct = ? WHERE answer_id = ?";
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, answer.getQuestionId());
+            ps.setString(2, answer.getAnswerText());
+            ps.setBoolean(3, answer.isCorrect());
+            ps.setInt(4, answer.getAnswerId());
+
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
-    public boolean deleteById(Integer integer) {
-        return false;
+    public boolean deleteById(Integer id) {
+        String sql = "DELETE FROM answers WHERE answer_id = ?";
+
+        try (Connection conn = ConnectionFactory.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

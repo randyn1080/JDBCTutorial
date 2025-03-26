@@ -23,7 +23,7 @@ class TopicDaoImplTest {
 
     @Test
     void testSaveAndFindById() {
-
+        Topic topic = new Topic();
     }
 
     @Test
